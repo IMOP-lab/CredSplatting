@@ -1,1 +1,1 @@
-There are no rulesets associated with this branch.
+CredSplatting: Perception Credence Oriented Feed-forward 3D Gaussian Splatting from Scalable Views
