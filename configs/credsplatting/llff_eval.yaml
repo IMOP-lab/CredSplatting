@@ -1,0 +1,25 @@
+parent_cfg: configs/credsplatting/dtu_pretrain.yaml
+
+train_dataset_module: lib.datasets.llff.credsplatting
+test_dataset_module: lib.datasets.llff.credsplatting
+
+credsplatting:
+    eval_center: True
+    reweighting: True
+    scale_factor: 12
+    test_input_views: 3
+    cas_config:
+        render_if: [False, True]
+        volume_planes: [16, 8]
+
+train_dataset:
+    data_root: '../datasets/llff'
+    split: 'train'
+    input_h_w: [640, 960]
+    input_ratio: 1.
+
+test_dataset:
+    data_root: '../datasets/llff'
+    split: 'test'
+    input_h_w: [640, 960]
+    input_ratio: 1.
