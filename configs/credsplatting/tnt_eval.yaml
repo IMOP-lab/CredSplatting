@@ -13,13 +13,13 @@ credsplatting:
         volume_planes: [64, 8]
 
 train_dataset:
-    data_root: '../datasets/tnt'
+    data_root: './datasets/tnt'
     split: 'train'
     input_h_w: [640, 960]
     input_ratio: 1.
 
 test_dataset:
-    data_root: '../datasets/tnt'
+    data_root: './datasets/tnt'
     split: 'test'
     input_h_w: [640, 960]
     input_ratio: 1.

@@ -8,18 +8,20 @@ test_dataset_module: lib.datasets.dtu.credsplatting
 network_module: lib.networks.credsplatting.network
 loss_module: lib.train.losses.credsplatting
 evaluator_module: lib.evaluators.credsplatting
+# evaluator_module: lib.evaluators.mvsgs_save_depth4
 
 save_result: True
 eval_lpips: True
-save_video: False
+save_video: True
 save_ply: False
 dir_ply: 'credsplatting_pointcloud'
+distributed: True
 
 # task config
 credsplatting:
     train_input_views: [2, 3, 4]
     train_input_views_prob: [0.1, 0.8, 0.1]
-    test_input_views: 3
+    test_input_views: 5
     scale_factor: 1
     viewdir_agg: True
     chunk_size: 1000000
@@ -49,16 +51,17 @@ credsplatting:
 
 # data input
 train_dataset:
-    data_root: '../datasets/dtu' #
+    data_root: './datasets/dtu'
     ann_file: 'data/credsplatting/dtu_train_all.txt'
     split: 'train'
     input_ratio: 1.
 
 test_dataset:
-    data_root: '../datasets/dtu' #
+    data_root: './datasets/dtu'
     ann_file: 'data/credsplatting/dtu_val_all.txt'
     split: 'test'
     input_ratio: 1.
+    # scene: ''
 
 train:
     batch_size: 1
@@ -74,7 +77,7 @@ train:
     sampler_meta:
         input_views_num: [2, 3, 4]
         input_views_prob: [0.1, 0.8, 0.1]
-    num_workers: 16
+    num_workers: 1
 
 test:
     batch_size: 1
@@ -84,7 +87,7 @@ test:
         input_views_num: [3]
         input_views_prob: [1.]
 
-ep_iter: 2000
+ep_iter: 1000
 save_ep: 1
 eval_ep: 1
 save_latest_ep: 1

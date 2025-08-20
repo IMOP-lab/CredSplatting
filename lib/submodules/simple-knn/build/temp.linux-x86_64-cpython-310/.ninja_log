@@ -1,0 +1,7 @@
+# ninja log v5
+0	5223	1746692179210253290	/home/lab2/2T/CredSplatting/lib/submodules/simple-knn/build/temp.linux-x86_64-cpython-310/simple_knn.o	7a0a5582231d1578
+0	11691	1746692185674286128	/home/lab2/2T/CredSplatting/lib/submodules/simple-knn/build/temp.linux-x86_64-cpython-310/ext.o	ab869dabc9f27b58
+0	27711	1746692201693367778	/home/lab2/2T/CredSplatting/lib/submodules/simple-knn/build/temp.linux-x86_64-cpython-310/spatial.o	b298007984b2da2e
+11	5227	1754191755441121556	/home/lab2/2T/CredSplatting/lib/submodules/simple-knn/build/temp.linux-x86_64-cpython-310/simple_knn.o	ca048b5fdcbefc3e
+11	8105	1754191758319163400	/home/lab2/2T/CredSplatting/lib/submodules/simple-knn/build/temp.linux-x86_64-cpython-310/ext.o	18052e64bb7a1d53
+11	27511	1754191777718445359	/home/lab2/2T/CredSplatting/lib/submodules/simple-knn/build/temp.linux-x86_64-cpython-310/spatial.o	655c4c1aa921951b

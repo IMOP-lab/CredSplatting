@@ -28,8 +28,8 @@ class Dataset:
 
     def build_metas(self):
         if len(self.scenes) == 0:
-            # scenes = ['fern', 'flower', 'fortress', 'horns', 'leaves', 'orchids', 'room', 'trex']
-            scenes = ['fern',]
+            scenes = ['fern', 'flower', 'fortress', 'horns', 'leaves', 'orchids', 'room', 'trex']
+            # scenes = ['fern',]
         else:
             scenes = self.scenes
         self.scene_infos = {}

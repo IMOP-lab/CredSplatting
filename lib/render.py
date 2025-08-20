@@ -14,8 +14,8 @@ from scene import Scene
 import os
 from tqdm import tqdm
 from os import makedirs
-# from gaussian_renderer_ft import render
-from gaussian_renderer_depth import render
+from gaussian_renderer_ft import render
+# from gaussian_renderer_depth import render
 import torchvision
 from utils.general_utils import safe_state
 from argparse import ArgumentParser

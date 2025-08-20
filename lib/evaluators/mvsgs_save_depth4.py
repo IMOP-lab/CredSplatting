@@ -132,7 +132,7 @@ class Evaluator:
 
                     # 保存 gt_depth 图像
                     # gt_depth_img_path = os.path.join(cfg.result_dir, 'depth_{}_{}_{}_gt.png'.format(batch['meta']['scene'][b], batch['meta']['tar_view'][b].item(), batch['meta']['frame_id'][b].item()))
-                    # colormap = cm.get_cmap('jet').reversed()
+                    colormap = cm.get_cmap('jet').reversed()
                     # # # 将 gt_depth 映射到彩色图 (0-255)
                     # # gt_depth_img = np.clip(gt_depth_img, 425., 905.)
                     # # gt_depth_color = colormap((gt_depth_img - 425.) / (905. - 425.))[:, :, :3]  # 去掉 alpha 通道
@@ -141,9 +141,12 @@ class Evaluator:
                     # 保存 pred_depth 图像
                     pred_depth_img_path = os.path.join(cfg.result_dir, '{}_{}_{}_pred_depth.png'.format(batch['meta']['scene'][b], batch['meta']['tar_view'][b].item(), batch['meta']['frame_id'][b].item()))
                     # 将 pred_depth 映射到彩色图 (0-255)
+
                     # pred_depth_img = np.clip(pred_depth_img, 425., 905.)
                     # pred_depth_color = colormap((pred_depth_img - pred_depth_img.min()) / (pred_depth_img.max() - pred_depth_img.min()))[:, :, :3]  # 去掉 alpha 通道
+
                     mi, ma = batch['near_far'].min().detach().cpu().numpy(), batch['near_far'].max().detach().cpu().numpy()
+                    mi, ma = pred_depth_img.min(), pred_depth_img.max()
                     pred_depth_img = (pred_depth_img - mi) / (ma - mi + 1e-8)  # normalize to 0~1
                     pred_depth_img = (255 * pred_depth_img).astype(np.uint8)
                     pred_depth_img = Image.fromarray(cv2.applyColorMap(pred_depth_img, cv2.COLORMAP_JET))
@@ -158,31 +161,6 @@ class Evaluator:
                     # print(pred_depth_color.shape)
                     imageio.imwrite(pred_depth_img_path, (pred_depth_color * 255.).astype(np.uint8))
 
-                    # 定义伽马值
-                    # gamma = 0.5  # 你可以调整这个值来控制区分度，0 < gamma < 1 会使低值更亮，大于1 会使高值更亮
-
-                    # # 保存 pred_depth 图像
-                    # pred_depth_img_path = os.path.join(cfg.result_dir, 'depth_{}_{}_{}_pred.png'.format(
-                    #     batch['meta']['scene'][b], batch['meta']['tar_view'][b].item(), batch['meta']['frame_id'][b].item()))
-
-                    # # 将 pred_depth 映射到彩色图 (0-255)
-                    # pred_depth_img = np.clip(pred_depth_img, 425., 905.)
-
-                    # # 归一化深度值到 [0, 1] 范围
-                    # norm_pred_depth = (pred_depth_img - pred_depth_img.min()) / (pred_depth_img.max() - pred_depth_img.min())
-
-                    # # 应用伽马变换以增加区分度
-                    # gamma_corrected = np.power(norm_pred_depth, gamma)
-
-                    # # 使用 colormap 将处理后的深度值映射为 RGB 颜色
-                    # colormap = cm.get_cmap('viridis')  # 你可以选择其他 colormap
-                    # pred_depth_color = colormap(gamma_corrected)[:, :, :3]  # 只取 RGB 通道，不要 alpha 通道
-
-                    # # 将颜色映射值转换为 [0, 255] 之间的整数
-                    # pred_depth_color_8bit = (pred_depth_color * 255.).astype(np.uint8)
-
-                    # # 保存为 PNG 图像
-                    # imageio.imwrite(pred_depth_img_path, pred_depth_color_8bit)
 
 
                     

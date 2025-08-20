@@ -2,8 +2,8 @@ import os
 import torch
 from random import randint
 from utils.loss_utils import l1_loss, ssim, psnr
-# from gaussian_renderer_ft import render
-from gaussian_renderer_depth import render
+from gaussian_renderer_ft import render
+# from gaussian_renderer_depth import render
 import sys
 from scene import Scene, GaussianModel
 import uuid
@@ -182,7 +182,7 @@ def training(dataset, opt, pipe, testing_iterations, saving_iterations, checkpoi
         loss = (1.0 - opt.lambda_dssim) * Ll1 + opt.lambda_dssim * (1.0 - ssim(image, gt_image))
 
         # unsupervised Depth Loss
-        opt.multi_view_weight_from_iter = 0
+        opt.multi_view_weight_from_iter = 50000
         if iteration > opt.multi_view_weight_from_iter:
             ### warp 特征 计算L1loss
             ##获得临近点的相机参数
@@ -244,6 +244,16 @@ def training(dataset, opt, pipe, testing_iterations, saving_iterations, checkpoi
                     loss +=  (L1_depth / use_view ) * 0.5
                     L1_depth_log = ((L1_depth / use_view) * 0.5).item()
 
+        # proj_loss = gaussians.compute_projection_loss()
+        # scale_loss = gaussians.compute_scale_loss()
+        # print(proj_loss, scale_loss)
+
+        # # 动态权重调整
+        # proj_weight = 0.05 * (1 - iteration/opt.iterations)
+        # scale_weight = 0.01 * (iteration/opt.iterations)
+
+        # loss += proj_weight * proj_loss
+        # loss += scale_weight * scale_loss
 
         loss.backward()
         iter_end.record()
@@ -270,6 +280,21 @@ def training(dataset, opt, pipe, testing_iterations, saving_iterations, checkpoi
                     gaussians.max_radii2D = torch.zeros_like(visibility_filter).type(torch.float32)
                 gaussians.max_radii2D[visibility_filter] = torch.max(gaussians.max_radii2D[visibility_filter], radii[visibility_filter])
                 gaussians.add_densification_stats(viewspace_point_tensor, visibility_filter)
+
+
+                # if iteration > opt.densify_from_iter and iteration % opt.densification_interval == 0:
+                #     # 计算曲率并调整阈值
+                #     curvature = gaussians.compute_curvature()
+                #     dynamic_threshold = opt.densify_grad_threshold * (1 + 0.5 * torch.sigmoid(curvature.mean() * 1000 - 1.5))
+                    
+                #     size_threshold = 20 if iteration > opt.opacity_reset_interval else None
+                #     gaussians.densify_and_prune(
+                #         min(dynamic_threshold.item(), 0.02),  # 上限保护
+                #         0.005, 
+                #         scene.cameras_extent, 
+                #         size_threshold, 
+                #         radii
+                #     )
 
                 if iteration > opt.densify_from_iter and iteration % opt.densification_interval == 0:
                     size_threshold = 20 if iteration > opt.opacity_reset_interval else None

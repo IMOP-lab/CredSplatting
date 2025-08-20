@@ -6,22 +6,22 @@ test_dataset_module: lib.datasets.colmap.credsplatting
 credsplatting:
     eval_center: True
     reweighting: True
-    scale_factor: 12
+    scale_factor: 1
     cas_config:
         render_if: [False, True]
-        volume_planes: [16, 8]
+        volume_planes: [64, 8]
 
 train_dataset:
-    data_root: 'examples'
+    data_root: 'datasets/Frames_S1'
     split: 'train'
-    input_h_w: [640, 960]
+    input_h_w: [480, 480]
     input_ratio: 1.
     scene: ''
 
 test_dataset:
-    data_root: 'examples'
+    data_root: 'datasets/Frames_S1'
     split: 'test'
-    input_h_w: [640, 960]
+    input_h_w: [480, 480]
     input_ratio: 1.
     scene: ''
 

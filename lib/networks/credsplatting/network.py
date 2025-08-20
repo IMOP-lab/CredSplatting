@@ -17,7 +17,8 @@ import sys
 from .iter import SpatialAttentionModule
 from einops import rearrange
 import torch.distributed as dist
-
+import ffmpeg
+import imageio_ffmpeg
 
 def convgnrelu(in_channels, out_channels, kernel_size=3, stride=1,dilation=1, bias=True, group_channel=8):
     return nn.Sequential(
@@ -560,9 +561,27 @@ class Network(nn.Module):
                     img_dir = os.path.join(cfg.result_dir, '{}_{}'.format(batch['meta']['scene'][b_i], batch['meta']['tar_view'][b_i].item()))
                     os.makedirs(img_dir,exist_ok=True)
                     save_path = os.path.join(img_dir,f'{len(pred_rgb_nb_list[b_i])}.png')
-                    print(save_path)
+                    # print(save_path)
                     PIL.Image.fromarray((render_novel_i.data.cpu().numpy()*255).astype(np.uint8)).save(save_path)
 
             for b_i in range(B):
                 video_path = os.path.join(cfg.result_dir, '{}_{}_{}.mp4'.format(batch['meta']['scene'][b_i], batch['meta']['tar_view'][b_i].item(), batch['meta']['frame_id'][b_i].item()))
-                imageio.mimwrite(video_path, np.stack(pred_rgb_nb_list[b_i]), fps=10, quality=10)
+                # imageio.mimwrite(video_path, np.stack(pred_rgb_nb_list[b_i]), fps=10, quality=10)
+                # imageio.mimwrite(video_path, np.stack(pred_rgb_nb_list[b_i]), fps=10, codec='libx264', pixelformat='yuv420p', quality=10)
+                # 假设 pred_rgb_nb_list[b_i] 是一个帧列表，形状为 [H, W, 3]，值范围 [0, 255]，类型为 uint8
+                frames = np.stack(pred_rgb_nb_list[b_i])  # shape: (T, H, W, 3)
+
+                # 写入视频
+                process = (
+                    ffmpeg
+                    .input('pipe:', format='rawvideo', pix_fmt='rgb24', s=f'{frames.shape[2]}x{frames.shape[1]}', r=10)
+                    .output(video_path, vcodec='libx264', pix_fmt='yuv420p')
+                    .overwrite_output()
+                    .run_async(pipe_stdin=True)
+                )
+
+                for frame in frames:
+                    process.stdin.write(frame.tobytes())
+
+                process.stdin.close()
+                process.wait()

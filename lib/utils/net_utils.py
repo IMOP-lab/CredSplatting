@@ -430,7 +430,9 @@ def load_network(net, model_dir, resume=True, epoch=-1, strict=True):
         if len(pths) == 0 and 'latest.pth' not in os.listdir(model_dir):
             return 0
         if epoch == -1:
-            if 'latest.pth' in os.listdir(model_dir):
+            if 'psnr_best.pth' in os.listdir(model_dir):
+                pth = 'psnr_best'
+            elif 'latest.pth' in os.listdir(model_dir):
                 pth = 'latest'
             else:
                 pth = max(pths)
