@@ -1,0 +1,22 @@
+parent_cfg: configs/credsplatting/dtu_pretrain.yaml
+
+train_dataset_module: lib.datasets.nerf.credsplatting
+test_dataset_module: lib.datasets.nerf.credsplatting
+
+credsplatting:
+    reweighting: True
+    scale_factor: 200
+    cas_config:
+        render_if: [False, True]
+
+train_dataset:
+    data_root: './datasets/nerf'
+    input_h_w: [800, 800]
+    split: 'train'
+    input_ratio: 1.
+
+test_dataset:
+    data_root: './datasets/nerf'
+    input_h_w: [800, 800]
+    split: 'test'
+    input_ratio: 1.
